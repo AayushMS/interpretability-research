@@ -1,15 +1,23 @@
 # Interpretability Research
 
 Personal research repo exploring LLM interpretability -- specifically, how much of Anthropic's
-July 2026 **"global workspace" / J-space** findings transfer to small open-weights models,
-using their open-sourced **Jacobian lens** (`jlens`).
+July 2026 **"global workspace" / J-space** findings transfer to small open-weights models
+(currently Qwen), using their open-sourced **Jacobian lens** (`jlens`).
+
+This project was sparked by Anthropic's announcement post,
+[**A Global Workspace in Language Models**](https://www.anthropic.com/research/global-workspace)
+-- worth reading first for the big picture.
 
 ## Background
 
-- [*Verbalizable Representations Form a Global Workspace in Language Models*](https://transformer-circuits.pub/2026/workspace/index.html) -- the paper (results on Claude Sonnet/Haiku/Opus 4.5)
-- [Anthropic announcement](https://www.anthropic.com/research/global-workspace)
-- [anthropics/jacobian-lens](https://github.com/anthropics/jacobian-lens) -- the tool (Apache-2.0 reference implementation)
-- [neuronpedia/jacobian-lens on HF](https://huggingface.co/neuronpedia/jacobian-lens) -- pre-fitted lens checkpoints for open models
+- [A Global Workspace in Language Models](https://www.anthropic.com/research/global-workspace) -- the announcement article that kicked this off
+- Links from that article:
+  - [*Verbalizable Representations Form a Global Workspace in Language Models*](https://transformer-circuits.pub/2026/workspace/index.html) -- the full paper (results on Claude Sonnet/Haiku/Opus 4.5)
+  - [anthropics/jacobian-lens](https://github.com/anthropics/jacobian-lens) -- the open-sourced tool (Apache-2.0 reference implementation)
+  - [J-lens interactive demo on Neuronpedia](https://neuronpedia.org/jlens) -- browse readouts on open-weights models, zero setup
+  - [Expert commentary (PDF)](https://www-cdn.anthropic.com/files/4zrzovbb/website/cc4be2488d65e54a6ed06492f8968398ddc18ebe.pdf) -- independent perspectives from neuroscientists, philosophers, and interpretability researchers
+  - [Agentic misalignment](https://www.anthropic.com/research/agentic-misalignment) -- earlier Anthropic work on models pursuing hidden goals (J-space monitoring is pitched as a detector for this)
+- [neuronpedia/jacobian-lens on HF](https://huggingface.co/neuronpedia/jacobian-lens) -- pre-fitted lens checkpoints for open models (what experiment 01 uses)
 
 The lens transports a hidden-state vector from any layer into the final-layer basis via a
 fitted Jacobian and decodes it through the unembedding -- *"what is this activation disposed
