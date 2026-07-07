@@ -10,17 +10,25 @@ See [experiments/01-jlens-qwen-cpu/](experiments/01-jlens-qwen-cpu/). Establishe
 works on open models and beats logit-lens; the hidden-intermediate multi-hop effect is absent
 at 0.8B (best ranks 5792 / 100 / 338 for Italy/France/Brazil).
 
-## 02 -- Scale sweep: where does the multi-hop effect emerge? 🔜 next
+## 02 -- Scale sweep: where does the multi-hop effect emerge? ✅ CPU half done (2026-07-07)
 
 **Goal:** find the model size where the hidden intermediate (Italy@boot etc.) becomes lens-visible.
-- **Method:** re-run experiment 01's Part 2 across Qwen3 1.7B / 4B / 8B / 14B and Qwen3.5 2B /
-  4B / 9B using the pre-fitted lenses already published on `neuronpedia/jacobian-lens`.
-  Metric: best rank of the intermediate token at the descriptor position, per model size.
-  Expand from 3 prompts to the full multi-hop set in the jacobian-lens repo
-  (`data/evaluations/lens-eval-multihop`) so the curve isn't three points.
-- **Hardware:** 1.7B *might* squeeze into this box in bf16 (~3.4 GB weights, tight against
-  7.6 GB RAM); everything larger needs a rented GPU (Colab Pro / RunPod / vast.ai -- personal
-  account, NOT MARE AWS). A single A10/T4 session covers 4B-8B; 14B+ wants an A100.
+- **Method:** run the full 93-prompt `lens-eval-multihop` set (copied into the experiment as
+  `multihop.json`) across every model with a published lens on `neuronpedia/jacobian-lens`.
+  Metric: best rank of the intermediate token over all layers x positions (a generous upper
+  bound), plus task-competence and answer-preview controls. See
+  [experiments/02-scale-sweep/](experiments/02-scale-sweep/).
+- **Done on this box (CPU):** pythia-70m, gpt2 (both fp32 -- bf16 collapses pythia's logits
+  into exact ties), Qwen3.5-0.8B, Qwen3-1.7B (bf16). Headline: best-anywhere intermediate
+  visibility saturates by 0.8B (84->91% of prompts <=10 vs ~30% shuffled control), but it
+  does NOT track task success and surfaces at end-of-prompt tokens in late layers --
+  association/late retrieval, not the paper's descriptor-token workspace readout. See the
+  experiment README.
+- **Remaining:** gemma-3-270m / gemma-3-1b (just needs an HF login + Gemma license click --
+  registry entries exist); Qwen3 4B / 8B / 14B on a rented GPU (Colab Pro / RunPod / vast.ai --
+  personal account, NOT MARE AWS). A single A10/T4 session covers 4B-8B; 14B+ wants an A100.
+  Same `sweep.py --model <key>` command everywhere; copy `raw/*.jsonl` back and re-run
+  `report.py`.
 - **Success criteria:** a rank-vs-parameters curve for the same prompts; identify the size
   where median best-rank drops under ~20.
 

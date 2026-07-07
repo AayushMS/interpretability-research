@@ -30,8 +30,23 @@ that's what this repo pokes at.
 | # | Experiment | Status | Headline result |
 |---|-----------|--------|-----------------|
 | 01 | [jlens on Qwen3.5-0.8B, CPU](experiments/01-jlens-qwen-cpu/) | **Done, independently verified** | Lens works and beats the logit-lens baseline (answers visible by L22); the paper's hidden-intermediate multi-hop effect does **not** reproduce at 0.8B |
+| 02 | [Scale sweep, 70M→1.7B](experiments/02-scale-sweep/) | **CPU half done** (Gemma + 4B+ pending) | Intermediates become readable *somewhere* by 0.8B (84–91% of 93 prompts vs ~30% shuffled control) — but visibility doesn't predict task success and hits sit at end-of-prompt tokens in late layers: association/late retrieval, not the paper's descriptor-token workspace effect |
 
 Planned experiments are in [PLANS.md](PLANS.md).
+
+## Try it yourself
+
+**[GUIDE.md](GUIDE.md)** is a from-zero walkthrough: setup, a menu of nine experiment types
+you can run on a laptop CPU, and the tips we learned the hard way. The quickest taste, after
+setup:
+
+```bash
+cd playground
+python peek.py --prompt "The capital of France is" --watch Paris
+```
+
+prints what the model is "disposed to say" at every layer — you watch `Paris` climb from
+rank ~thousands to rank ~1 as the answer forms.
 
 ## For future sessions (human or AI)
 

@@ -78,6 +78,30 @@ index; `PLANS.md` has the roadmap. Next planned step: **experiment 02, the scale
 - Git/GitHub: personal account -- see `CLAUDE.md` for the exact push flow (author
   `AayushMS <mansinghaayush@gmail.com>`, `gh auth switch --user AayushMS`, HTTPS remote).
 
+## 2026-07-07 (evening): experiment 02 CPU half landed; repo made public; GUIDE + playground added
+
+- **Repo is now PUBLIC** on GitHub (user request).
+- **Experiment 02 (scale sweep), CPU half done** -- pythia-70m / gpt2 (fp32) and
+  Qwen3.5-0.8B / Qwen3-1.7B (bf16), all 93 prompts of `lens-eval-multihop`, with a
+  shuffled-intermediate control. Verified findings (see `experiments/02-scale-sweep/`):
+  best-anywhere intermediate visibility saturates by 0.8B (84%/91% of prompts <=10 vs ~30%
+  control); it does NOT differ between solved and unsolved prompts at any size; hits
+  cluster at end-of-prompt function tokens in the back half of the network -- so at <=2B it
+  reads as association/late retrieval, NOT the paper's descriptor-token workspace effect
+  (exp 01's negative stands: Brazil@`Carnival` r338 at the descriptor vs r3 anywhere).
+  Remaining: gemma-3-270m/1b (just needs HF login + license click), Qwen3 4B/8B/14B (rented
+  GPU); same `sweep.py --model` command, copy `raw/*.jsonl` back, re-run `report.py`.
+- **Methodological trap found: bf16 collapses pythia-70m's final logits into thousands of
+  exact ties** (rank becomes meaningless). Small models now run fp32 via a per-model dtype
+  in the `sweep.py` registry; every record carries a `model_max_ties` audit field (Qwen
+  bf16 is fine: worst case 3 tied tokens on 4/93 prompts).
+- **New for humans: `GUIDE.md`** (from-zero setup + nine DIY experiment types) and
+  **`playground/peek.py`** (one-command per-layer readout of any prompt with `--watch`
+  word rank tracking, `--position`, `--logit-lens` baseline; imports the exp-02 registry).
+- Driver quirk learned: `nohup script.sh & echo $!` reports the nohup wrapper's pid, not
+  the script's -- write `$$` to a pidfile inside the script instead (see scratchpad
+  drivers), and never `pkill -f` a pattern that matches your own shell.
+
 ## Open questions
 
 - At what parameter count does the hidden-intermediate effect become lens-visible? (Exp 02)

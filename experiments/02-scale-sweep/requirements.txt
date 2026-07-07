@@ -1,0 +1,3 @@
+torch
+transformers
+jlens @ git+https://github.com/anthropics/jacobian-lens
