@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright 2026 Anthropic PBC lens code is Apache-2.0; this demo is a thin driver.
+# MIT license; the jlens dependency (anthropics/jacobian-lens) is Apache-2.0.
 """End-to-end Jacobian-lens demo on the smallest Qwen with a published lens.
 
 Loads Qwen/Qwen3.5-0.8B on CPU, pulls the pre-fitted Jacobian lens from the
